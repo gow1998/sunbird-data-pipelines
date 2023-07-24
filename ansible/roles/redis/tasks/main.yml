@@ -10,11 +10,12 @@
   become: yes
 
 - name: create the redis dir
-  become: yes
+  #become: yes
   become_user: "{{ redis_user }}"
   file:
     path: "{{ analytics_redis_user_home }}/redis"
     state: directory
+  become: yes
 
 - name: download redis zipfile
   become: yes
