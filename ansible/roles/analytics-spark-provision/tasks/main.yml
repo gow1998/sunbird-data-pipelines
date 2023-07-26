@@ -88,7 +88,7 @@
   apt:
     name: ["gcc", "autoconf", "curl", "g++", "gnupg", "automake", "bison", "libc6-dev", "libffi-dev", "libgdbm-dev", "libncurses5-dev", "libsqlite3-dev", "pkg-config", "sqlite3", "zlib1g-dev", "libtool", "libyaml-dev", "make", "libgmp-dev", "libreadline-dev", "libssl-dev", "gpgv2", "gem", "ruby", "gnupg2", "virtualenv"]
     state: installed
-    update_cache: true
+    #update_cache: true
     cache_valid_time: 3600
 
 - name: Import rvm keys
