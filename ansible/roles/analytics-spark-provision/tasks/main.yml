@@ -122,9 +122,12 @@
   become_user: "{{ analytics_user }}"
   shell: "export PATH=$PATH:/home/analytics/.rvm/bin && rvm install ruby-2.5"
 
-#- name: Add ruby repository
-  #become: yes
-  #apt_repository:
+- name: Add ruby repository
+  become: yes
+  apt_repository:
+    validate_certs: no
+    repo: 'ppa:brightbox/ruby-ng'
+    state: present
     #repo: ppa:brightbox/ruby-ng
 
 - name: Install latest ruby-dev
