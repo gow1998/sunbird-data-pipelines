@@ -124,8 +124,8 @@
 
 - name: Add ruby repository
   become: yes
-  apt_repository:
-    repo: ppa:brightbox/ruby-ng
+  #apt_repository:
+    #repo: ppa:brightbox/ruby-ng
 
 - name: Install latest ruby-dev
   become: yes
