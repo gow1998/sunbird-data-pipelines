@@ -156,8 +156,9 @@
 
 - name: Add python ppa
   become: yes
-  apt_repository:
-    repo: ppa:deadsnakes/ppa
+  ansible.builtin.command: add-apt-repository ppa:deadsnakes/ppa
+  #apt_repository:
+    #repo: ppa:deadsnakes/ppa
 
 - name: Install python 3.6
   become: yes
