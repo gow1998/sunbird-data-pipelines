@@ -156,11 +156,14 @@
 
 - name: Add python ppa
   become: yes
-  ansible.builtin.apt:
-    name: ppa:deadsnakes/ppa
+  apt_repository:
+    validate_certs: no
+    repo: 'ppa:deadsnakes/ppa'
     state: present
-  #apt_repository:
-    #repo: ppa:deadsnakes/ppa
+  #ansible.builtin.apt:
+   # name: ppa:deadsnakes/ppa
+    #state: present
+  
 
 - name: Install python 3.6
   become: yes
