@@ -514,6 +514,7 @@
 
 - name: Revoke gcloud access
   include_tasks: gcloud-revoke.yml
+  when: cloud_service_provider == "gcloud"
   tags:
-    - framework  
+    - always  
   
