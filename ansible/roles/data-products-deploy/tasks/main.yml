@@ -2,7 +2,7 @@
 
 - name: Authenticate to gcloud
   include_tasks: gcloud-auth.yml
-  when: cloud_service_provider == "gcloud"
+  #when: cloud_service_provider == "gcloud"
 
 #- name: Ensure gcp bucket storage exists
  # command: gsutil mb -p {{ projectId }} -l {{ region }} gs://{{ bucket }}
