@@ -1,14 +1,16 @@
 ## Data products deployment ##
 
-#- name: Authenticate to gcloud
- # include_tasks: gcloud-auth.yml
-  #when: cloud_service_provider == "gcloud"
-
-- name: Configure gcloud service account
-  shell: gcloud auth activate-service-account "{{ gcp_storage_service_account_name }}" --key-file="{{ gcp_storage_key_file }}"
+- name: Authenticate to gcloud
+  include_tasks: gcloud-auth.yml
   when: cloud_service_provider == "gcloud"
   tags:
     - always
+
+#- name: Configure gcloud service account
+#  shell: gcloud auth activate-service-account "{{ gcp_storage_service_account_name }}" --key-file="{{ gcp_storage_key_file }}"
+ # when: cloud_service_provider == "gcloud"
+ # tags:
+ #   - always
 
 #- name: Ensure gcp bucket storage exists
  # command: gsutil mb -p {{ projectId }} -l {{ region }} gs://{{ bucket }}
