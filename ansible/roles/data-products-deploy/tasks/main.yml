@@ -511,3 +511,9 @@
   tags:
     - run-sanity
   register: SanityCheckStatus
+
+- name: Revoke gcloud access
+  include_tasks: gcloud-revoke.yml
+  tags:
+    - framework  
+  
