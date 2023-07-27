@@ -2,8 +2,8 @@ analytics_user: analytics
 analytics_group: analytics
 spark_output_temp_dir: /mount/data/analytics/tmp/
 
-bucket: "telemetry-data-store"
-secor_bucket: "telemetry-data-store"
+bucket: "dev-reports-upsmf"
+secor_bucket: "dev-reports-upsmf"
 dp_object_store_type: "azure"
 cloud_service_provider: "{{ cloud_service_provider }}"
 projectId: "{{ gcloud_private_bucket_projectId }}"
