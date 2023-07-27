@@ -1,7 +1,18 @@
 ## Data products deployment ##
+
+- name: Authenticate to gcloud
+  include_tasks: gcloud-auth.yml
+  when: cloud_service_provider == "gcloud"
+
+- name: Ensure gcp bucket storage exists
+  command: gsutil mb -p {{ projectId }} -l {{ region }} gs://{{ bucket }}
+  when: cloud_service_provider == "gcloud"
+  tags:
+    - always
+  
 - name: Ensure azure blob storage container exists
   command: az storage container create --name {{ bucket }}
-  when: dp_object_store_type == "azure"
+  when: cloud_service_provider == "azure"
   tags:
     - always
 
@@ -10,10 +21,19 @@
   tags:
     - dataproducts
 
+- name: Copy Core Data Products to gcp bucket
+  command: gsutil cp -c -r {{ analytics.home }}/models-{{ model_version }}/{{ analytics_batch_module_artifact }} gs://{{ bucket }}/models-{{ model_version }}/{{ analytics_batch_module_artifact }}
+  async: 3600
+  poll: 10
+  when: cloud_service_provider == "gcloud"
+  tags:
+    - dataproducts-spark-cluster
+
 - name: Copy Core Data Products to azure blob
   command: az storage blob upload --overwrite -c {{ bucket }} --name models-{{ model_version }}/{{ analytics_batch_module_artifact }} -f {{ analytics.home }}/models-{{ model_version }}/{{ analytics_batch_module_artifact }}
   async: 3600
   poll: 10
+  when: cloud_service_provider == "azure"
   tags:
     - dataproducts-spark-cluster 
 
@@ -27,18 +47,44 @@
   command: az storage blob upload --overwrite -c {{ bucket }} --name models-{{ model_version }}/data-products-1.0.jar -f {{ analytics.home }}/models-{{ model_version }}/data-products-1.0/data-products-1.0.jar
   async: 3600
   poll: 10
+  when: cloud_service_provider == "azure"
   tags:
-    - ed-dataproducts-spark-cluster      
+    - ed-dataproducts-spark-cluster  
+
+- name: Copy Ed Data Products to GCP blob
+  command: gsutil cp -c {{ analytics.home }}/models-{{ model_version }}/data-products-1.0/data-products-1.0.jar gs://{{ bucket }}/models-{{ model_version }}/data-products-1.0.jar
+  async: 3600
+  poll: 10
+  when: cloud_service_provider == "gcloud"
+  tags:
+    - ed-dataproducts-spark-cluster   
 
 - name: Copy Framework Library
   copy: src={{ analytics_core_artifact }} dest={{ analytics.home }}/models-{{ model_version }}
   tags:
     - framework
 
+- name: Copy Framework Library to GCP blob
+  command:  gsutil cp -c -d {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }} gs://{{ bucket }}/models-{{ model_version }}/{{ analytics_core_artifact }}
+  async: 3600
+  poll: 10
+  when: cloud_service_provider == "gcloud"
+  tags:
+    - framework-spark-cluster
+
+- name: Copy Framework Library to GCP blob
+  command: gsutil cp -c {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }} gs://{{ bucket }}/models-{{ model_version }}/{{ analytics_core_artifact }}
+  async: 3600
+  poll: 10
+  when: cloud_service_provider == "gcloud"
+  tags:
+    - framework-spark-cluster
+
 - name: Copy Framework Library to azure blob
   command: az storage blob upload --overwrite --debug -c {{ bucket }} --name models-{{ model_version }}/{{ analytics_core_artifact }} -f {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }}
   async: 3600
   poll: 10
+  when: cloud_service_provider == "azure"
   tags:
     - framework-spark-cluster
 
@@ -51,8 +97,17 @@
   command: az storage blob upload --overwrite -c {{ bucket }} --name models-{{ model_version }}/{{ scruid_artifact }} -f {{ analytics.home }}/models-{{ model_version }}/{{ scruid_artifact }}
   async: 3600
   poll: 10
+  when: cloud_service_provider == "azure"
   tags:
     - framework-spark-cluster  
+
+- name: Copy Scruid Library to GCP blob
+  command:  gsutil cp -c {{ analytics.home }}/models-{{ model_version }}/{{ scruid_artifact }} gs://{{ bucket }}/models-{{ model_version }}/{{ scruid_artifact }}
+  async: 3600
+  poll: 10
+   when: cloud_service_provider == "gcloud"
+  tags:
+    - framework-spark-cluster 
 
 - name: Copy Job Manager
   copy: src={{ analytics_job_manager_artifact }} dest={{ analytics.home }}/models-{{ model_version }}
@@ -100,6 +155,15 @@
   command: az storage blob upload --overwrite -c {{ bucket }} -f {{ analytics.home }}/models-{{ model_version }}/application.conf --name models-{{ model_version }}/application.conf
   async: 3600
   poll: 10
+  when: cloud_service_provider == "azure"
+  tags:
+    - framework-spark-cluster
+
+- name: Copy configuration file to GCP
+  command: gsutil cp -c {{ analytics.home }}/models-{{ model_version }}/application.conf gs://{{ bucket }}/models-{{ model_version }}/application.conf
+  async: 3600
+  poll: 10
+  when: cloud_service_provider == "gcloud"
   tags:
     - framework-spark-cluster    
 
